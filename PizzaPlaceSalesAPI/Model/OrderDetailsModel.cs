@@ -7,10 +7,19 @@ namespace PizzaPlaceSalesAPI.Model
         [Key]
         public int order_details_id { get; set; }
         [Required]
-        public OrderModel order_id { get;}
+        public string order_id { get;}
         [Required]
-        public PizzasModel pizza_id { get; set; }
+        public string pizza_id { get; set; }
         [Required]
         public int quantity { get; set;}
+    }
+
+    public class OrderDetailsTempModel
+    {
+        public int order_details_id { get; set; }
+        public string order_id { get; }
+        public string pizza_id { get; set; }
+        public int quantity { get; set; }
+
     }
 }
