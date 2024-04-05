@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaPlaceSalesAPI.Model.DBContext;
 
@@ -10,9 +11,11 @@ using PizzaPlaceSalesAPI.Model.DBContext;
 namespace PizzaPlaceSalesAPI.Migrations
 {
     [DbContext(typeof(PizzaDBContext))]
-    partial class PizzaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240405192935_UpdateDBTBL_Pizza")]
+    partial class UpdateDBTBL_Pizza
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,18 +94,20 @@ namespace PizzaPlaceSalesAPI.Migrations
                     b.Property<string>("pizza_id")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("pizza_type_id")
+                    b.Property<string>("pizza_type_id1")
                         .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("size")
                         .IsRequired()
-                        .HasColumnType("char(5)");
+                        .HasColumnType("char(1)");
 
                     b.HasKey("pizza_id");
+
+                    b.HasIndex("pizza_type_id1");
 
                     b.ToTable("pizzas");
                 });
@@ -116,6 +121,17 @@ namespace PizzaPlaceSalesAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("pizza_id");
+                });
+
+            modelBuilder.Entity("PizzaPlaceSalesAPI.Model.PizzasModel", b =>
+                {
+                    b.HasOne("PizzaPlaceSalesAPI.Model.PizzaTypeModel", "pizza_type_id")
+                        .WithMany()
+                        .HasForeignKey("pizza_type_id1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("pizza_type_id");
                 });
 #pragma warning restore 612, 618
         }

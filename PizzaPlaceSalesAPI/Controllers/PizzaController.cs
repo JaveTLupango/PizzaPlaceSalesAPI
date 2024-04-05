@@ -3,6 +3,7 @@ using EFCore.BulkExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PizzaPlaceSalesAPI.Model;
 using PizzaPlaceSalesAPI.Model.DBContext;
 using PizzaPlaceSalesAPI.Services;
@@ -17,33 +18,71 @@ namespace PizzaPlaceSalesAPI.Controllers
     [ApiController]
     public class PizzaController : ControllerBase
     {
-        private readonly ICSVService _csvService;
-        private readonly PizzaDBContext _context;
-        private readonly IPizzaService _pizzaService;
+        private readonly IPizzaService _pizzaService; // Service Initialization of Pizza Service.
 
-        public PizzaController(PizzaDBContext context, ICSVService cSVService, IPizzaService pizzaService)
+        public PizzaController(IPizzaService pizzaService)
         {
-            _context = context;
-            _csvService = cSVService;
             _pizzaService = pizzaService;
         }
         /// <summary>
-        /// GET: api/Pizza's
+        /// GET: api/Pizza
         /// </summary>
         /// <returns>return model Pizza model </returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PizzasModel>>> GetPizzas()
         {
-            return await _context.pizzas.ToListAsync();
+            return await _pizzaService.GetPizzas().ToListAsync();
         }
 
-        [HttpPost("read-pizza-csv")]
+        /// <summary>
+        /// GET: API/Pizzas/GetPizzasWithTypeDetails
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetPizzasWithTypeDetails")]
+        public async Task<List<PizzasTempModel>> GetPizzasWithTypeDetails()
+        {
+            string response = await _pizzaService.GetPizzasWithTypeDetails();
+            List<PizzasTempModel> list = JsonConvert.DeserializeObject<List<PizzasTempModel>>(response);
+            return list;
+        }
+
+        /// <summary>
+        /// POST: api/pizzas/GetByID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("GetByID")]
+        public async Task<ActionResult<IEnumerable<PizzasModel>>> GetByID(string id)
+        {
+            return await _pizzaService.GetPizzas().Where(s => s.pizza_id.ToLower() == id.ToLower()).ToListAsync();
+        }
+
+        /// <summary>
+        /// POST: API/Pizzas/GetPizzasWithTypeDetails
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost("GetByIdWithTypeDetails")]
+        public async Task<List<PizzasTempModel>> GetByIdWithTypeDetails(string id)
+        {
+            string response = await _pizzaService.GetListOfPizzaByIdWithTypeDetails(id);
+            List<PizzasTempModel> list = JsonConvert.DeserializeObject<List<PizzasTempModel>>(response);
+            return list;
+        }
+
+
+        /// <summary>
+        /// POST: api/Pizza/BulkInsert
+        /// bulk insertion of pizza endpoint
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost("BulkInsert")]
         public async Task<IActionResult> BulkInsertPizza([FromForm] IFormFileCollection file)
         {
             try
             {
-                List<PizzaTempModel> pizzas = _csvService.ReadCSV<PizzaTempModel>(file[0].OpenReadStream()).ToList();
-                var ret = await _pizzaService.InsertBulkPizza(pizzas);
+                var ret = await _pizzaService.InsertBulkPizza(file[0].OpenReadStream());
                 return Ok();
             }
             catch (Exception ex)

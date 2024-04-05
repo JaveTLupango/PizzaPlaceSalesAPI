@@ -9,20 +9,36 @@ namespace PizzaPlaceSalesAPI.Services
 {
     public class PizzaTypesService: IPizzaTypesService
     {
-        public readonly PizzaDBContext _dbContext;
-        public readonly ICSVService _csvService;
+        public readonly PizzaDBContext _dbContext; // DbContext Initialization.
+        public readonly ICSVService _csvService; // Service Initialization of CSVService.
+
+        /// <summary>
+        /// Contructor of PizzaTypesService
+        /// </summary>
+        /// <param name="pizzaDBContext"></param>
+        /// <param name="cSVService"></param>
         public PizzaTypesService(PizzaDBContext pizzaDBContext, ICSVService cSVService)
         {
             _dbContext = pizzaDBContext;
             _csvService = cSVService;
         }
 
+        /// <summary>
+        /// Private method handler for CSV to List
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         private List<PizzaTypeModel> ConvertDataFromCSVToList(Stream file)
         {
             List<PizzaTypeModel> list = _csvService.ReadCSV<PizzaTypeModel>(file).ToList();
             return list;
         }
 
+        /// <summary>
+        /// Bulk Insertion Method
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public async Task<bool> InsertBulkPizzaType(Stream file)
         {
             try
@@ -40,6 +56,10 @@ namespace PizzaPlaceSalesAPI.Services
             }
         }
 
+        /// <summary>
+        /// return Dataset of Pizza Type
+        /// </summary>
+        /// <returns></returns>
         public DbSet<PizzaTypeModel> GetPizzaType()
         {
             return _dbContext.pizza_type;
