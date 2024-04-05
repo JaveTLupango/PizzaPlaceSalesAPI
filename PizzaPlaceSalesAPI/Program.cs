@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PizzaPlaceSalesAPI.Model.DBContext;
+using PizzaPlaceSalesAPI.Services.IServices;
+using PizzaPlaceSalesAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PizzaDBContext>(options => options.UseSqlServer(
 builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+builder.Services.AddScoped<ICSVService, CSVService>();
 
 var app = builder.Build();
 
