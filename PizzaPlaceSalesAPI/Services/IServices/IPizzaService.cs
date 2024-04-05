@@ -1,9 +1,13 @@
-﻿using PizzaPlaceSalesAPI.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using PizzaPlaceSalesAPI.Model;
 
 namespace PizzaPlaceSalesAPI.Services.IServices
 {
     public interface IPizzaService
     {
-        Task<bool> InsertBulkPizza(List<PizzaTempModel> list);
+        DbSet<PizzasModel> GetPizzas();
+        Task<bool> InsertBulkPizza(Stream file);
+        Task<string> GetPizzasWithTypeDetails();
+        Task<string> GetListOfPizzaByIdWithTypeDetails(string id);
     }
 }

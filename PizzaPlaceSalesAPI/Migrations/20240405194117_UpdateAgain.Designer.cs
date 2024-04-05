@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaPlaceSalesAPI.Model.DBContext;
 
@@ -10,9 +11,11 @@ using PizzaPlaceSalesAPI.Model.DBContext;
 namespace PizzaPlaceSalesAPI.Migrations
 {
     [DbContext(typeof(PizzaDBContext))]
-    partial class PizzaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240405194117_UpdateAgain")]
+    partial class UpdateAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,7 @@ namespace PizzaPlaceSalesAPI.Migrations
 
                     b.Property<string>("size")
                         .IsRequired()
-                        .HasColumnType("char(5)");
+                        .HasColumnType("char(1)");
 
                     b.HasKey("pizza_id");
 
