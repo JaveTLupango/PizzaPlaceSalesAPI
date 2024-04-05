@@ -15,7 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PizzaDBContext>(options => options.UseSqlServer(
 builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
 builder.Services.AddScoped<ICSVService, CSVService>();
+builder.Services.AddScoped<IPizzaService, PizzaService>();
+builder.Services.AddScoped<IPizzaTypesService, PizzaTypesService>();
 
 var app = builder.Build();
 
