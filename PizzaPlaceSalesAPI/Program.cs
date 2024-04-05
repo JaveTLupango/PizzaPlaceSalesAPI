@@ -19,6 +19,7 @@ builder.Configuration.GetConnectionString("DefaultConnection")
 builder.Services.AddScoped<ICSVService, CSVService>();
 builder.Services.AddScoped<IPizzaService, PizzaService>();
 builder.Services.AddScoped<IPizzaTypesService, PizzaTypesService>();
+builder.Services.AddScoped<IOrderServices, OrderServices>();
 
 var app = builder.Build();
 
