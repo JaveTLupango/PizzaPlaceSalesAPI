@@ -20,6 +20,10 @@ namespace PizzaPlaceSalesAPI.Controllers
     {
         private readonly IPizzaService _pizzaService; // Service Initialization of Pizza Service.
 
+        /// <summary>
+        /// Constructor of PizzaController
+        /// </summary>
+        /// <param name="pizzaService"></param>
         public PizzaController(IPizzaService pizzaService)
         {
             _pizzaService = pizzaService;

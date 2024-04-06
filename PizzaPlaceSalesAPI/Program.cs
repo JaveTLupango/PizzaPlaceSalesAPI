@@ -20,6 +20,7 @@ builder.Services.AddScoped<ICSVService, CSVService>();
 builder.Services.AddScoped<IPizzaService, PizzaService>();
 builder.Services.AddScoped<IPizzaTypesService, PizzaTypesService>();
 builder.Services.AddScoped<IOrderServices, OrderServices>();
+builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 
 var app = builder.Build();
 

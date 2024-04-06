@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PizzaPlaceSalesAPI.Model.DBContext;
 
@@ -10,9 +11,11 @@ using PizzaPlaceSalesAPI.Model.DBContext;
 namespace PizzaPlaceSalesAPI.Migrations
 {
     [DbContext(typeof(PizzaDBContext))]
-    partial class PizzaDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240405214247_UpdateTableOrderDetails")]
+    partial class UpdateTableOrderDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,13 +31,6 @@ namespace PizzaPlaceSalesAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_details_id"));
-
-                    b.Property<int>("order_id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("pizza_id")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("quantity")
                         .HasColumnType("int");

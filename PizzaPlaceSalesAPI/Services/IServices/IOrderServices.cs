@@ -7,5 +7,6 @@ namespace PizzaPlaceSalesAPI.Services.IServices
     {
         Task<bool> InsertBulkOrders(Stream file);
         DbSet<OrderModel> GetOrders();
+        Task<string> GetOrderDetails(int id);
     }
 }
