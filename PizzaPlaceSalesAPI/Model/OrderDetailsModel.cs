@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PizzaPlaceSalesAPI.Model
 {
@@ -7,19 +8,17 @@ namespace PizzaPlaceSalesAPI.Model
         [Key]
         public int order_details_id { get; set; }
         [Required]
-        public string order_id { get;}
+        public int order_id { get; set; }
         [Required]
+        [Column(TypeName = "varchar(50)")]
         public string pizza_id { get; set; }
         [Required]
         public int quantity { get; set;}
     }
 
-    public class OrderDetailsTempModel
+    public class OrderDetails
     {
-        public int order_details_id { get; set; }
-        public string order_id { get; }
-        public string pizza_id { get; set; }
+        public PizzasTempModel pizza { get; set; }
         public int quantity { get; set; }
-
     }
 }
