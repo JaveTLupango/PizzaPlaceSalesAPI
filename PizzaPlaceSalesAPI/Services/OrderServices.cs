@@ -20,8 +20,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <param name="dbContext"></param>
         public OrderServices(ICSVService cSVService, PizzaDBContext dbContext)
         {
-            _csvService = cSVService;
-            _dbContext = dbContext;
+            this._csvService = cSVService;
+            this._dbContext = dbContext;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         private List<OrderModel> ConvertDataFromCSVToList(Stream file)
         {
-            List<OrderModel> list = _csvService.ReadCSV<OrderModel>(file).ToList();
+            List<OrderModel> list = this._csvService.ReadCSV<OrderModel>(file).ToList();
             return list;
         }
 
@@ -46,8 +46,8 @@ namespace PizzaPlaceSalesAPI.Services
             {
                 List<OrderModel> list = ConvertDataFromCSVToList(file);
 
-                await _dbContext.BulkInsertAsync(list);
-                await _dbContext.SaveChangesAsync();
+                await this._dbContext.BulkInsertAsync(list);
+                await this._dbContext.SaveChangesAsync();
 
                 return true;
             }
@@ -63,7 +63,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public DbSet<OrderModel> GetOrders()
         {
-            return _dbContext.orders;
+            return this._dbContext.orders;
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public async Task<string> GetOrderDetails(int id)
         {
-            var queryPZ = _dbContext.pizzas.Join(
-                    _dbContext.pizza_type,
+            var queryPZ = this._dbContext.pizzas.Join(
+                    this._dbContext.pizza_type,
                     p1 => p1.pizza_type_id,
                     p2 => p2.pizza_type_id,
                     (p1, p2) => new
@@ -88,14 +88,14 @@ namespace PizzaPlaceSalesAPI.Services
                     }
                 ).ToList();
 
-            var queryOrder = (from q1 in _dbContext.orders.AsEnumerable().Where(w => w.order_id == id).ToList()
+            var queryOrder = (from q1 in this._dbContext.orders.AsEnumerable().Where(w => w.order_id == id).ToList()
                               select new
                               {
                                   order_id = q1.order_id,
                                   date = q1.date,
                                   time = q1.time,
-                                  order_details = 
-                                  _dbContext.order_details.AsEnumerable().Where(w => w.order_id == q1.order_id).ToList()
+                                  order_details =
+                                  this._dbContext.order_details.AsEnumerable().Where(w => w.order_id == q1.order_id).ToList()
                                   .Join(
                                       queryPZ,
                                       q2 => q2.pizza_id,

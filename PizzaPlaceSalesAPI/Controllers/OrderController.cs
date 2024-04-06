@@ -36,7 +36,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         {
             try
             {
-                await _services.InsertBulkOrders(file[0].OpenReadStream());
+                await this._services.InsertBulkOrders(file[0].OpenReadStream());
                 return Ok();
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         [HttpPost("GetOrderWithOrderDetails")]
         public async Task<List<OrderWithDetailsTempModel>> GetOrderWithOrderDetails(int id)
         {
-           string response =  await _services.GetOrderDetails(id);
+           string response =  await this._services.GetOrderDetails(id);
            List< OrderWithDetailsTempModel > list = JsonConvert.DeserializeObject<List<OrderWithDetailsTempModel>>(response);
            return list;
         }

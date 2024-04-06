@@ -19,8 +19,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <param name="cSVService"></param>
         public PizzaTypesService(PizzaDBContext pizzaDBContext, ICSVService cSVService)
         {
-            _dbContext = pizzaDBContext;
-            _csvService = cSVService;
+            this._dbContext = pizzaDBContext;
+            this._csvService = cSVService;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         private List<PizzaTypeModel> ConvertDataFromCSVToList(Stream file)
         {
-            List<PizzaTypeModel> list = _csvService.ReadCSV<PizzaTypeModel>(file).ToList();
+            List<PizzaTypeModel> list = this._csvService.ReadCSV<PizzaTypeModel>(file).ToList();
             return list;
         }
 
@@ -45,8 +45,8 @@ namespace PizzaPlaceSalesAPI.Services
             {
                 List<PizzaTypeModel> list = ConvertDataFromCSVToList(file);
 
-                await _dbContext.BulkInsertAsync(list);
-                await _dbContext.SaveChangesAsync();
+                await this._dbContext.BulkInsertAsync(list);
+                await this._dbContext.SaveChangesAsync();
 
                 return true;
             }
@@ -62,7 +62,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public DbSet<PizzaTypeModel> GetPizzaType()
         {
-            return _dbContext.pizza_type;
+            return this._dbContext.pizza_type;
         }
     }
 }

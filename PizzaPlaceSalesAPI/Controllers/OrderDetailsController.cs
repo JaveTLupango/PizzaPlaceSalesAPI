@@ -18,7 +18,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         /// <param name="service"></param>
         public OrderDetailsController(IOrderDetailService service)
         {
-            _service = service;
+            this._service = service;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         {
             try
             {
-                await _service.InsertBulkOrderDetails(file[0].OpenReadStream());
+                await this._service.InsertBulkOrderDetails(file[0].OpenReadStream());
                 return Ok();
             }
             catch (Exception ex)

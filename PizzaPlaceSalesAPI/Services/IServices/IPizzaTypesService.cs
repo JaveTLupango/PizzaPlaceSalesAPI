@@ -7,6 +7,5 @@ namespace PizzaPlaceSalesAPI.Services.IServices
     {
         Task<bool> InsertBulkPizzaType(Stream file);
         DbSet<PizzaTypeModel> GetPizzaType();
-
     }
 }
