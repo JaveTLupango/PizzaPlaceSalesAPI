@@ -12,13 +12,13 @@ namespace PizzaPlaceSalesAPI.Services
         public readonly PizzaDBContext _dbContext;
         public OrderDetailService(ICSVService csvService, PizzaDBContext dBContext)
         {
-            _csvService = csvService;
-            _dbContext = dBContext;
+            this._csvService = csvService;
+            this._dbContext = dBContext;
         }
 
         private List<OrderDetailsModel> ConvertDataFromCSVToList(Stream file)
         {
-            List<OrderDetailsModel> list = _csvService.ReadCSV<OrderDetailsModel>(file).ToList();
+            List<OrderDetailsModel> list = this._csvService.ReadCSV<OrderDetailsModel>(file).ToList();
             return list;
         }
 
@@ -28,8 +28,8 @@ namespace PizzaPlaceSalesAPI.Services
             {
                 List<OrderDetailsModel> list = ConvertDataFromCSVToList(file);
 
-                await _dbContext.BulkInsertAsync(list);
-                await _dbContext.SaveChangesAsync();
+                await this._dbContext.BulkInsertAsync(list);
+                await this._dbContext.SaveChangesAsync();
 
                 return true;
             }
@@ -41,7 +41,7 @@ namespace PizzaPlaceSalesAPI.Services
 
         public DbSet<OrderDetailsModel> GetOrderDetails()
         {
-            return _dbContext.order_details;
+            return this._dbContext.order_details;
         }
     }
 }

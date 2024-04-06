@@ -10,7 +10,7 @@ namespace PizzaPlaceSalesAPI.Controllers
     [ApiController]
     public class PizzaTypesController : ControllerBase
     {
-        public readonly IPizzaTypesService _pizzatypeService; // Service Initialization of Pizza Type Service.
+        public readonly IPizzaTypesService _service; // Service Initialization of Pizza Type Service.
 
         /// <summary>
         /// Constructor of PizzaTypeController
@@ -18,7 +18,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         /// <param name="pizzaTypesService"></param>
         public PizzaTypesController(IPizzaTypesService pizzaTypesService)
         {
-            _pizzatypeService = pizzaTypesService;
+            this._service = pizzaTypesService;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PizzaTypeModel>>> Get()
         {
-            return await _pizzatypeService.GetPizzaType().ToListAsync();
+            return await this._service.GetPizzaType().ToListAsync();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         {
             try
             {
-                await _pizzatypeService.InsertBulkPizzaType(file[0].OpenReadStream());
+                await this._service.InsertBulkPizzaType(file[0].OpenReadStream());
                 return Ok();
             }
             catch (Exception ex)
@@ -59,7 +59,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         [HttpPost("GetByTypeID")]
         public async Task<ActionResult<IEnumerable<PizzaTypeModel>>> GetByTypeID(string typeID)
         {
-            return await _pizzatypeService.GetPizzaType().Where(s => s.pizza_type_id.ToLower() == typeID.ToLower()).ToListAsync();
+            return await this._service.GetPizzaType().Where(s => s.pizza_type_id.ToLower() == typeID.ToLower()).ToListAsync();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace PizzaPlaceSalesAPI.Controllers
         [HttpPost("GetByTypeCategory")]
         public async Task<ActionResult<IEnumerable<PizzaTypeModel>>> GetByTypeCategory(string category)
         {
-            return await _pizzatypeService.GetPizzaType().Where(s => s.category.ToLower() == category.ToLower()).ToListAsync();
+            return await this._service.GetPizzaType().Where(s => s.category.ToLower() == category.ToLower()).ToListAsync();
         }
 
     }
