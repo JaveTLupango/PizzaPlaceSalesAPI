@@ -14,4 +14,13 @@ namespace PizzaPlaceSalesAPI.Model
         [Column(TypeName = "varchar(50)")]
         public string time { get; set; }
     }
+
+    public class OrderWithDetailsTempModel
+    {
+        public int order_id { get; set; }
+        public string date { get; set; }
+        public string time { get; set; }
+        public List<OrderDetails> order_details {  get; set; }
+
+    }
 }

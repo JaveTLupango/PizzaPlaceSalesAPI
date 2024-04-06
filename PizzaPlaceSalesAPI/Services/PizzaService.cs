@@ -11,13 +11,13 @@ namespace PizzaPlaceSalesAPI.Services
 {
     public class PizzaService: IPizzaService
     {
-        public readonly PizzaDBContext _context; // DbContext Initialization.
+        public readonly PizzaDBContext _dbContext; // DbContext Initialization.
         public readonly ICSVService _csvService; // Service Initialization of CSVService.
 
         public PizzaService(PizzaDBContext pizzaDBContext, ICSVService csvService)
         {
-            _context = pizzaDBContext;
-            _csvService = csvService;
+            this._dbContext = pizzaDBContext;
+            this._csvService = csvService;
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace PizzaPlaceSalesAPI.Services
             try
             {
                 var pizzas = _csvService.ReadCSV<PizzasModel>(file).ToList();
-                await _context.BulkInsertAsync(pizzas);
-                await _context.SaveChangesAsync();
+                await this._dbContext.BulkInsertAsync(pizzas);
+                await this._dbContext.SaveChangesAsync();
 
                 return true;
             }
@@ -47,7 +47,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public DbSet<PizzasModel> GetPizzas() 
         {
-            return _context.pizzas;
+            return this._dbContext.pizzas;
         }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public async Task<string> GetPizzasWithTypeDetails()
         {
-            var ret = _context.pizzas.Join(
-                    _context.pizza_type,
+            var ret = this._dbContext.pizzas.Join(
+                    this._dbContext.pizza_type,
                     p1 => p1.pizza_type_id,
                     p2 => p2.pizza_type_id,
                     (p1, p2) => new
@@ -80,8 +80,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public async Task<string> GetListOfPizzaByIdWithTypeDetails(string id)
         {
-            var ret = _context.pizzas.Join(
-                    _context.pizza_type,
+            var ret = this._dbContext.pizzas.Join(
+                    this._dbContext.pizza_type,
                     p1 => p1.pizza_type_id,
                     p2 => p2.pizza_type_id,
                     (p1, p2) => new

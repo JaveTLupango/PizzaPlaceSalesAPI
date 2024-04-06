@@ -1,8 +1,10 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PizzaPlaceSalesAPI.Model;
 using PizzaPlaceSalesAPI.Model.DBContext;
 using PizzaPlaceSalesAPI.Services.IServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PizzaPlaceSalesAPI.Services
 {
@@ -18,8 +20,8 @@ namespace PizzaPlaceSalesAPI.Services
         /// <param name="dbContext"></param>
         public OrderServices(ICSVService cSVService, PizzaDBContext dbContext)
         {
-            _csvService = cSVService;
-            _dbContext = dbContext;
+            this._csvService = cSVService;
+            this._dbContext = dbContext;
         }
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         private List<OrderModel> ConvertDataFromCSVToList(Stream file)
         {
-            List<OrderModel> list = _csvService.ReadCSV<OrderModel>(file).ToList();
+            List<OrderModel> list = this._csvService.ReadCSV<OrderModel>(file).ToList();
             return list;
         }
 
@@ -44,8 +46,8 @@ namespace PizzaPlaceSalesAPI.Services
             {
                 List<OrderModel> list = ConvertDataFromCSVToList(file);
 
-                await _dbContext.BulkInsertAsync(list);
-                await _dbContext.SaveChangesAsync();
+                await this._dbContext.BulkInsertAsync(list);
+                await this._dbContext.SaveChangesAsync();
 
                 return true;
             }
@@ -61,7 +63,53 @@ namespace PizzaPlaceSalesAPI.Services
         /// <returns></returns>
         public DbSet<OrderModel> GetOrders()
         {
-            return _dbContext.orders;
+            return this._dbContext.orders;
+        }
+
+        /// <summary>
+        /// get order by order id
+        /// return orders with details.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<string> GetOrderDetails(int id)
+        {
+            var queryPZ = this._dbContext.pizzas.Join(
+                    this._dbContext.pizza_type,
+                    p1 => p1.pizza_type_id,
+                    p2 => p2.pizza_type_id,
+                    (p1, p2) => new
+                    {
+                        pizza_id = p1.pizza_id,
+                        pizza_type_id = p2.pizza_type_id,
+                        size = p1.size,
+                        price = p1.price,
+                        pizza_type = p2
+                    }
+                ).ToList();
+
+            var queryOrder = (from q1 in this._dbContext.orders.AsEnumerable().Where(w => w.order_id == id).ToList()
+                              select new
+                              {
+                                  order_id = q1.order_id,
+                                  date = q1.date,
+                                  time = q1.time,
+                                  order_details =
+                                  this._dbContext.order_details.AsEnumerable().Where(w => w.order_id == q1.order_id).ToList()
+                                  .Join(
+                                      queryPZ,
+                                      q2 => q2.pizza_id,
+                                      q3 => q3.pizza_id,
+                                      (q2, q3) => new
+                                      {
+                                          quantity = q2.quantity,
+                                          pizza = q3
+                                      }
+                                      )
+                              });
+
+            return JsonConvert.SerializeObject(queryOrder);
+           
         }
     }
 }
